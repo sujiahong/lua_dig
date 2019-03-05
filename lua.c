@@ -110,7 +110,11 @@ static void createargtable (lua_State* L, char** argv, int argc, int script) {
     lua_setglobal(L, "arg");
 }
 
-
+static int dochunk(lua_State* L, int status){
+    if (status == LUA_OK)
+        status = docall(L, 0, 0);
+    return report(L, status);
+}
 
 
 int main(int argc, char** argv){
