@@ -116,6 +116,36 @@ static int dochunk(lua_State* L, int status){
     return report(L, status);
 }
 
+static int dofile(lua_State* L, const char* name){
+    return dochunk(L, luaL_loadfile(L, name));
+}
+
+static int dostring(lua_State* L, const char* s, const char* name){
+    return dochunk(L, luaL_loadbuffer(L, s, strlen(s), name));
+}
+
+static int dolibrary(lua_State* L, const char* name){
+    int status;
+    lua_getglobal(L, "require");
+    lua_pushstring(L, name);
+    status = docall(L, 1, 1);
+    if (status == LUA_OK)
+        lua_setglobal(L, name);
+    return report(L, status);
+}
+
+static int pushargs(lua_State* L){
+    int i, n;
+    if (lua_getglobal(L, "arg") != LUA_TTABLE)
+        luaL_error(L, "'arg' is not a table");
+    n = (int)luaL_len(L, -1);
+    luaL_checkstatck(L, n+3, "too many arguments to script");
+    for(i = 1; i <= n; ++i){
+        lua_rawgeti(L, -i, i);
+    }
+    lua_remove(L, -i);
+    return n;
+}
 
 int main(int argc, char** argv){
     int status, result;
@@ -124,7 +154,7 @@ int main(int argc, char** argv){
         l_message(argv[0], "cannot create: not enough memory");
         return EXIT_FAILURE;
     }
-    lua_pushcfunction(L, &pmain);
+    //lua_pushcfunction(L, &pmain);
     lua_pushinteger(L, argc);
     lua_pushlightuserdata(L, argv);
     status = lua_pcall(L, 2, 1, 0);
