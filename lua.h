@@ -164,10 +164,10 @@ LUA_API int (lua_setiuservalue) (lua_State* L, int idx, int n);
 
 
 LUA_API void (lua_callk) (lua_State* L, int nargs, int nresults, lua_KContext ctx, lua_KFunction k);
-#define lua_call(L,n,r) lua_callk(L, (n), (r), 0, NULL);
+#define lua_call(L,n,r) lua_callk(L, (n), (r), 0, NULL)
 
 LUA_API int (lua_pcallk) (lua_State* L, int nargs, int nresults, int errfunc, lua_KContext ctx, lua_KFunction k);
-#define lua_pcall(L,n,r,f)  lua_pcallk(L, (n), (r), (f), 0, NULL);
+#define lua_pcall(L,n,r,f)  lua_pcallk(L, (n), (r), (f), 0, NULL)
 
 LUA_API int (lua_load) (lua_State* L, lua_Reader reader, void* dt, const char* chunkname, const char* mode);
 LUA_API int (lua_dump) (lua_State* L, lua_Writer writer, void* data, int strip);
